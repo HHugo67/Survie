@@ -1,10 +1,13 @@
 package fr.hhugo.survie;
 
+import fr.hhugo.survie.Commands.SurvieGUI;
+import fr.hhugo.survie.Configurations.MessagesConfig;
 import fr.hhugo.survie.Configurations.SurvieConfig;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Survie extends JavaPlugin
 {
@@ -19,6 +22,7 @@ public class Survie extends JavaPlugin
     public void onEnable()
     {
         SurvieConfig.getInstance().load();
+        MessagesConfig.getInstance().load();
 
         getLogger().info(ANSI_WHITE_BACKGROUND + ANSI_GREEN + "Le plugin de Survie est actif" + ANSI_RESET);
     }
@@ -27,6 +31,11 @@ public class Survie extends JavaPlugin
     public void onDisable()
     {
         getLogger().info(ANSI_WHITE_BACKGROUND + ANSI_RED + "Le plugin de survie n'est plus actif" + ANSI_RESET);
+    }
+
+    private void registerCommands()
+    {
+        Objects.requireNonNull(getCommand("gui")).setExecutor(new SurvieGUI());
     }
 
     public static Survie getInstance()

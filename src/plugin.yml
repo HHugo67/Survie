@@ -3,3 +3,6 @@ version: 0.1
 author: HHugo_
 main: fr.hhugo.survie.Survie
 api-version: 1.21
+commands:
+  gui:
+    description: Configure le plugin depuis un menu
