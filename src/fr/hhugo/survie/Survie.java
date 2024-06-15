@@ -24,12 +24,17 @@ public class Survie extends JavaPlugin
         SurvieConfig.getInstance().load();
         MessagesConfig.getInstance().load();
 
+        replacements.put("&", "§");
+
+        registerCommands();
+
         getLogger().info(ANSI_WHITE_BACKGROUND + ANSI_GREEN + "Le plugin de Survie est actif" + ANSI_RESET);
     }
 
     @Override
     public void onDisable()
     {
+        replacements.clear();
         getLogger().info(ANSI_WHITE_BACKGROUND + ANSI_RED + "Le plugin de survie n'est plus actif" + ANSI_RESET);
     }
 

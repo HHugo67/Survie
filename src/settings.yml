@@ -1,1 +1,3 @@
 survie:
+  gui:
+    name: "&8Configuration du plugin"
