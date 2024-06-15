@@ -1,13 +1,11 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="Survie:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/Survie_jar</output-path>
+    <output-path>$PROJECT_DIR$/../Server 1.20.1/plugins</output-path>
     <root id="archive" name="Survie.jar">
-      <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/../Server 1.20.1/plugins/META-INF/MANIFEST.MF" />
-      </element>
       <element id="module-output" name="Survie" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../Server 1.20.1/bundler/libraries/spigot-api-1.21-R0.1-SNAPSHOT.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../Server 1.20.1/bundler/libraries/bungeecord-chat-1.20-R0.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../Server 1.20.1/bundler/libraries/sqlite-jdbc-3.46.0.0.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
