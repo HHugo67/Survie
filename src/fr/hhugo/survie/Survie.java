@@ -18,9 +18,9 @@ public class Survie extends JavaPlugin
     @Override
     public void onEnable()
     {
-        getLogger().info(ANSI_WHITE_BACKGROUND + ANSI_GREEN + "Le plugin de Survie est actif" + ANSI_RESET);
-
         SurvieConfig.getInstance().load();
+
+        getLogger().info(ANSI_WHITE_BACKGROUND + ANSI_GREEN + "Le plugin de Survie est actif" + ANSI_RESET);
     }
 
     @Override

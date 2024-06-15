@@ -5,7 +5,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,15 +17,20 @@ public class SurvieConfig
     private File file;
     private YamlConfiguration config;
 
+    private SurvieConfig() {}
+
     public void load()
     {
         file = new File(plugin.getDataFolder(), "settings.yml");
         if(!file.exists())
+        {
             plugin.getLogger().info(Survie.ANSI_WHITE_BACKGROUND + Survie.ANSI_GREEN
                     + "Création du fichier settings.yml..." + Survie.ANSI_RESET);
+            plugin.saveResource("settings.yml", false);
+        }
 
         config = new YamlConfiguration();
-        config.options().copyDefaults(true);
+        config.options().parseComments(true);
 
         try
         {
