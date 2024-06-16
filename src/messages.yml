@@ -15,6 +15,7 @@ survie:
 # Contient les messages liés à la santé du joueur
   sante:
     fracture: "&7Tu t'es fracturé la jambe, il te faut des soins pour éviter l'infection!"
+    guerison: "&aTu es maintenant guéri!"
 
 # Contient tous les messages d'erreurs
   message_erreur:

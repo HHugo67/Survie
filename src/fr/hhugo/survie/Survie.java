@@ -33,6 +33,7 @@ public class Survie extends JavaPlugin
         DatabaseManager db = DatabaseManager.getInstance();
         db.connect(SurvieConfig.getInstance().getString("survie.database"));
 
+        loadRecipes();
         registerEvents();
         registerCommands();
 
@@ -61,6 +62,11 @@ public class Survie extends JavaPlugin
     {
         Objects.requireNonNull(getCommand("gui")).setExecutor(new SurvieGUI());
         Objects.requireNonNull(getCommand("admin")).setExecutor(new AdminCommand());
+    }
+
+    private void loadRecipes()
+    {
+        Fracture.getInstance().craftBandage();
     }
 
     public static Survie getInstance()

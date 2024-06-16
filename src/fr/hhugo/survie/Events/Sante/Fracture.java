@@ -7,17 +7,23 @@ import fr.hhugo.survie.Survie;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class Fracture implements Listener
 {
@@ -28,6 +34,8 @@ public class Fracture implements Listener
 
     private static final Map<String, String> replacements = Survie.replacements;
 
+    private static final Fracture INSTANCE = new Fracture();
+
     @EventHandler
     public void onFallDamage(EntityDamageEvent e)
     {
@@ -37,8 +45,6 @@ public class Fracture implements Listener
             {
                 double chuteDistance = player.getFallDistance();
                 double chuteDegats = calculateFallDamage(player, chuteDistance);
-                player.sendMessage(ChatColor.BLUE + "" + chuteDistance);
-                player.sendMessage(ChatColor.RED + "" + chuteDegats);
                 if(chuteDistance >= 10.0 && chuteDegats >= 7.0)
                 {
                     player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS,
@@ -81,5 +87,45 @@ public class Fracture implements Listener
                     new PotionEffect(PotionEffectType.SLOWNESS, PotionEffect.INFINITE_DURATION, 1)), 1L);
     }
 
-    
+    public void craftBandage()
+    {
+        ItemStack bandage = new ItemStack(Material.PAPER, 1);
+        ItemMeta bandageMeta = bandage.getItemMeta();
+        bandageMeta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "Bandage");
+        bandage.setItemMeta(bandageMeta);
+
+        NamespacedKey bandageKey = new NamespacedKey(plugin, "Bandage");
+        ShapedRecipe recipe = new ShapedRecipe(bandageKey, bandage);
+        recipe.shape("SSS", "PPP", "SSS");
+        recipe.setIngredient('S', Material.STRING);
+        recipe.setIngredient('P', Material.PAPER);
+
+        Bukkit.addRecipe(recipe);
+    }
+
+    @EventHandler
+    public void onInteractBandage(PlayerInteractEvent e)
+    {
+        Player player = e.getPlayer();
+        ItemStack item = e.getItem();
+
+        if(item != null && item.getType() == Material.PAPER
+                && item.hasItemMeta() && Objects.requireNonNull(item.getItemMeta()).hasDisplayName()
+                && item.getItemMeta().getDisplayName().equals(ChatColor.WHITE + "" + ChatColor.BOLD + "Bandage"))
+        {
+            if(player.hasMetadata("Fracture"))
+            {
+                player.removeMetadata("Fracture", plugin);
+                player.removePotionEffect(PotionEffectType.SLOWNESS);
+                String guerisonMessage = mc.getString("survie.sante.guerison", replacements);
+                player.sendMessage(guerisonMessage);
+                item.setAmount(item.getAmount() - 1);
+            }
+        }
+    }
+
+    public static Fracture getInstance()
+    {
+        return INSTANCE;
+    }
 }
