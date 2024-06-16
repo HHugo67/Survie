@@ -3,6 +3,7 @@ package fr.hhugo.survie;
 import fr.hhugo.survie.Commands.SurvieGUI;
 import fr.hhugo.survie.Configurations.MessagesConfig;
 import fr.hhugo.survie.Configurations.SurvieConfig;
+import fr.hhugo.survie.Database.DatabaseManager;
 import fr.hhugo.survie.Events.ConnexionJoueur;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -27,6 +28,9 @@ public class Survie extends JavaPlugin
 
         replacements.put("&", "§");
 
+        DatabaseManager db = DatabaseManager.getInstance();
+        db.connect(SurvieConfig.getInstance().getString("survie.database"));
+
         registerEvents();
         registerCommands();
 
@@ -37,6 +41,10 @@ public class Survie extends JavaPlugin
     public void onDisable()
     {
         replacements.clear();
+
+        DatabaseManager db = DatabaseManager.getInstance();
+        db.disconnect();
+
         getLogger().info(ANSI_WHITE_BACKGROUND + ANSI_RED + "Le plugin de survie n'est plus actif" + ANSI_RESET);
     }
 

@@ -50,14 +50,16 @@ public class SurvieGUI implements CommandExecutor, Listener
 
             // region Item message de join
             replacements.put("%state%", String.valueOf(sc.getBoolean("survie.connexion_joueur.join")));
-            setItemInInventory(inventaire, Material.GREEN_DYE, 0,
+            setItemInInventory(inventaire,0,
+                    sc.getMaterial("survie.gui.join_message_item.material"),
                     sc.getString("survie.gui.join_message_item.name", replacements),
                     sc.getStringList("survie.gui.join_message_item.lore", replacements));
             // endregion
 
             // region Item message de quit
             replacements.put("%state%", String.valueOf(sc.getBoolean("survie.connexion_joueur.quit")));
-            setItemInInventory(inventaire, Material.RED_DYE, 1,
+            setItemInInventory(inventaire, 1,
+                    sc.getMaterial("survie.gui.quit_message_item.material"),
                     sc.getString("survie.gui.quit_message_item.name", replacements),
                     sc.getStringList("survie.gui.quit_message_item.lore", replacements));
             // endregion
@@ -116,7 +118,7 @@ public class SurvieGUI implements CommandExecutor, Listener
         }
     }
 
-    private void setItemInInventory(Inventory inventaire, Material material, int slot, String name, List<String> lore)
+    private void setItemInInventory(Inventory inventaire,  int slot, Material material, String name, List<String> lore)
     {
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();

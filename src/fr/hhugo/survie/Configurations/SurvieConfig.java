@@ -1,6 +1,7 @@
 package fr.hhugo.survie.Configurations;
 
 import fr.hhugo.survie.Survie;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -133,6 +134,20 @@ public class SurvieConfig
     public ConfigurationSection getConfigurationSection(String path)
     {
         return config.getConfigurationSection(path);
+    }
+
+    public Material getMaterial(String path)
+    {
+        try
+        {
+            return Material.valueOf(config.getString(path));
+        }
+        catch (Exception ex)
+        {
+            plugin.getLogger().severe(Survie.ANSI_WHITE_BACKGROUND + Survie.ANSI_RED
+                    + ex.getMessage() + Survie.ANSI_RESET);
+            return null;
+        }
     }
 
     public static SurvieConfig getInstance()

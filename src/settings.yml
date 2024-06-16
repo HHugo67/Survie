@@ -1,5 +1,7 @@
 survie:
 
+  database: "SurvieBDD.db"
+
 # Permet de d'activer/désactiver le message de join/quit
   connexion_joueur:
     join: true
@@ -10,11 +12,13 @@ survie:
   gui:
     name: "&8Configuration du plugin"
     join_message_item:
+      material: GREEN_DYE
       name: "&7Message de &3JOIN"
       lore:
         - "&8Clique pour activer/désactiver le message de join"
         - "&8Etat : &6%state%"
     quit_message_item:
+      material: RED_DYE
       name: "&7Message de &3QUIT"
       lore:
         - "&8Clique pour activer/désactiver le message de quit"
