@@ -41,7 +41,9 @@ public class AdminCommand implements CommandExecutor
                 else
                     player.setMetadata("AdminMode", new FixedMetadataValue(plugin, true));
             }
-            
+            else
+                player.setMetadata("AdminMode", new FixedMetadataValue(plugin, true));
+
             replacements.put("%adminmode%", String.valueOf(player.getMetadata("AdminMode").get(0).asBoolean()));
             player.sendMessage(mc.getString("survie.admin_mode", replacements));
             return false;
