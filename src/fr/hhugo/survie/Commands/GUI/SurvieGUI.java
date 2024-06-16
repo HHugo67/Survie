@@ -123,7 +123,7 @@ public class SurvieGUI implements CommandExecutor, Listener
         }
     }
 
-    private void setItemInInventory(Inventory inventaire,  int slot, Material material, String name, List<String> lore)
+    private void setItemInInventory(Inventory inventaire, int slot, Material material, String name, List<String> lore)
     {
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
