@@ -16,8 +16,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.List;
 import java.util.Map;
 
 public class SurvieGUI implements CommandExecutor, Listener
@@ -50,15 +50,16 @@ public class SurvieGUI implements CommandExecutor, Listener
 
             // region Item message de join
             replacements.put("%state%", String.valueOf(sc.getBoolean("survie.connexion_joueur.join")));
-            ItemStack joinMessageStack = new ItemStack(Material.GREEN_DYE);
-            ItemMeta joinMessageMeta = joinMessageStack.getItemMeta();
-            if(joinMessageMeta != null)
-            {
-                joinMessageMeta.setDisplayName(sc.getString("survie.gui.join_message_item.name", replacements));
-                joinMessageMeta.setLore(sc.getStringList("survie.gui.join_message_item.lore", replacements));
-            }
-            joinMessageStack.setItemMeta(joinMessageMeta);
-            inventaire.setItem(0, joinMessageStack);
+            setItemInInventory(inventaire, Material.GREEN_DYE, 0,
+                    sc.getString("survie.gui.join_message_item.name", replacements),
+                    sc.getStringList("survie.gui.join_message_item.lore", replacements));
+            // endregion
+
+            // region Item message de quit
+            replacements.put("%state%", String.valueOf(sc.getBoolean("survie.connexion_joueur.quit")));
+            setItemInInventory(inventaire, Material.RED_DYE, 1,
+                    sc.getString("survie.gui.quit_message_item.name", replacements),
+                    sc.getStringList("survie.gui.quit_message_item.lore", replacements));
             // endregion
         }
         else
@@ -93,10 +94,38 @@ public class SurvieGUI implements CommandExecutor, Listener
                 joinMessageStack.setItemMeta(joinMessageMeta);
             }
             // endregion
+
+            // region Item message de quit
+            if(e.getSlot() == 1)
+            {
+                ItemStack quitMessageStack = e.getCurrentItem();
+                ItemMeta quitMessageMeta = quitMessageStack.getItemMeta();
+                if(sc.getBoolean("survie.connexion_joueur.quit"))
+                    sc.set("survie.connexion_joueur.quit", false);
+                else
+                    sc.set("survie.connexion_joueur.quit", true);
+                replacements.put("%state%", String.valueOf(sc.getBoolean("survie.connexion_joueur.quit")));
+                quitMessageMeta.setLore(sc.getStringList("survie.gui.quit_message_item.lore", replacements));
+                quitMessageStack.setItemMeta(quitMessageMeta);
+            }
+            // endregion
         }
         else if(inventoryView.getTitle().equalsIgnoreCase(sc.getString("survie.gui_joueur.name", replacements)))
         {
             e.setCancelled(true);
         }
+    }
+
+    private void setItemInInventory(Inventory inventaire, Material material, int slot, String name, List<String> lore)
+    {
+        ItemStack itemStack = new ItemStack(material);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if(itemMeta != null)
+        {
+            itemMeta.setDisplayName(name);
+            itemMeta.setLore(lore);
+        }
+        itemStack.setItemMeta(itemMeta);
+        inventaire.setItem(slot, itemStack);
     }
 }
