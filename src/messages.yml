@@ -1,2 +1,13 @@
 survie:
-  non_joueur: "&cTu dois être un joueur pour effectuer la commande &6%command%"
+
+# Contient les messages de join et quit s'il sont actifs
+# Mettre %player% pour avoir le nom du joueur
+# Mettre %current% pour avoir le nombre de joueurs en ligne
+# Mettre %max% pour avoir le nombre maximum de joueurs sur le serveur
+  connexion_joueur:
+    join: "&6%player% &7a rejoint la partie &8(%current%/%max%)"
+    quit: "&6%player% &7a quitté la partie &8(%current%/%max%)"
+
+# Contient tous les messages d'erreurs
+  message_erreur:
+    non_joueur: "&cTu dois être un joueur pour effectuer la commande &6%command%"

@@ -3,6 +3,7 @@ package fr.hhugo.survie;
 import fr.hhugo.survie.Commands.SurvieGUI;
 import fr.hhugo.survie.Configurations.MessagesConfig;
 import fr.hhugo.survie.Configurations.SurvieConfig;
+import fr.hhugo.survie.Events.ConnexionJoueur;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -26,6 +27,7 @@ public class Survie extends JavaPlugin
 
         replacements.put("&", "§");
 
+        registerEvents();
         registerCommands();
 
         getLogger().info(ANSI_WHITE_BACKGROUND + ANSI_GREEN + "Le plugin de Survie est actif" + ANSI_RESET);
@@ -36,6 +38,13 @@ public class Survie extends JavaPlugin
     {
         replacements.clear();
         getLogger().info(ANSI_WHITE_BACKGROUND + ANSI_RED + "Le plugin de survie n'est plus actif" + ANSI_RESET);
+    }
+
+    private void registerEvents()
+    {
+        getServer().getPluginManager().registerEvents(new ConnexionJoueur(), this);
+
+        getServer().getPluginManager().registerEvents(new SurvieGUI(), this);
     }
 
     private void registerCommands()

@@ -1,3 +1,20 @@
 survie:
+
+# Permet de d'activer/désactiver le message de join/quit
+  connexion_joueur:
+    join: true
+    quit: true
+
+# Permet de personnaliser le GUI pour configurer le plugin en jeu
+# Mettre %state% pour avoir l'état de la fonctionnalité (true/false)
   gui:
     name: "&8Configuration du plugin"
+    join_message_item:
+      name: "&7Message de &3join"
+      lore:
+        - "&8Clique pour activer/désactiver le message de join"
+        - "&8Etat : &6%state%"
+
+# Permet de personnalier le GUI du profil du joueur
+  gui_joueur:
+    name: "&8Profil de &6%player%"
