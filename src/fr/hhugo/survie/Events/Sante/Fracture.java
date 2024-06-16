@@ -96,7 +96,7 @@ public class Fracture implements Listener
 
         NamespacedKey bandageKey = new NamespacedKey(plugin, "Bandage");
         ShapedRecipe recipe = new ShapedRecipe(bandageKey, bandage);
-        recipe.shape("SSS", "PPP", "SSS");
+        recipe.shape(" S ", " P ", " S ");
         recipe.setIngredient('S', Material.STRING);
         recipe.setIngredient('P', Material.PAPER);
 
