@@ -1,5 +1,6 @@
 survie:
 
+# Chemin vers la base de données
   database: "SurvieBDD.db"
 
 # Permet de d'activer/désactiver le message de join/quit

@@ -1,6 +1,7 @@
 package fr.hhugo.survie;
 
-import fr.hhugo.survie.Commands.SurvieGUI;
+import fr.hhugo.survie.Commands.AdminCommand;
+import fr.hhugo.survie.Commands.GUI.SurvieGUI;
 import fr.hhugo.survie.Configurations.MessagesConfig;
 import fr.hhugo.survie.Configurations.SurvieConfig;
 import fr.hhugo.survie.Database.DatabaseManager;
@@ -58,6 +59,7 @@ public class Survie extends JavaPlugin
     private void registerCommands()
     {
         Objects.requireNonNull(getCommand("gui")).setExecutor(new SurvieGUI());
+        Objects.requireNonNull(getCommand("admin")).setExecutor(new AdminCommand());
     }
 
     public static Survie getInstance()

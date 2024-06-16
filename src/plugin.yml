@@ -4,5 +4,7 @@ author: HHugo_
 main: fr.hhugo.survie.Survie
 api-version: 1.21
 commands:
+  admin:
+    description: Passe en mode administrateur
   gui:
     description: Configure le plugin depuis un menu

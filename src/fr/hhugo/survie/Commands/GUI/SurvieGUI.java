@@ -1,7 +1,8 @@
-package fr.hhugo.survie.Commands;
+package fr.hhugo.survie.Commands.GUI;
 
 import fr.hhugo.survie.Configurations.MessagesConfig;
 import fr.hhugo.survie.Configurations.SurvieConfig;
+import fr.hhugo.survie.Database.DatabaseManager;
 import fr.hhugo.survie.Survie;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -25,6 +26,7 @@ public class SurvieGUI implements CommandExecutor, Listener
     private static final Survie plugin = Survie.getInstance();
     private static final MessagesConfig mc = MessagesConfig.getInstance();
     private static final SurvieConfig sc = SurvieConfig.getInstance();
+    private static final DatabaseManager db = DatabaseManager.getInstance();
 
     private static final Map<String, String> replacements = Survie.replacements;
 
@@ -41,9 +43,12 @@ public class SurvieGUI implements CommandExecutor, Listener
         }
 
         replacements.put("%player%", player.getName());
+        String uuid = player.getUniqueId().toString();
         Inventory inventaire;
 
-        if(player.hasPermission("survie.gui") || player.isOp())
+        if((player.hasPermission("survie.admin") || player.hasPermission("survie.*") || player.isOp())
+                && db.isAdmin(uuid)
+                && (player.hasMetadata("AdminMode") && player.getMetadata("AdminMode").get(0).asBoolean()))
         {
             inventaire = Bukkit.createInventory(player, TAILLE_GUI,
                     sc.getString("survie.gui.name", replacements));

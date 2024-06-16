@@ -21,6 +21,8 @@ public class DatabaseManager
         try
         {
             connection = DriverManager.getConnection("jdbc:sqlite:" + path);
+            plugin.getLogger().info(Survie.ANSI_WHITE_BACKGROUND + Survie.ANSI_GREEN
+                    + "Connexion à la BDD..." + Survie.ANSI_RESET);
             createTables();
         }
         catch (SQLException ex)
@@ -28,9 +30,6 @@ public class DatabaseManager
             plugin.getLogger().severe(Survie.ANSI_WHITE_BACKGROUND + Survie.ANSI_RED
                     + ex.getMessage() + Survie.ANSI_RESET);
         }
-
-        plugin.getLogger().info(Survie.ANSI_WHITE_BACKGROUND + Survie.ANSI_GREEN
-                + "Connexion à la BDD..." + Survie.ANSI_RESET);
     }
 
     public void disconnect()
@@ -38,15 +37,14 @@ public class DatabaseManager
         try
         {
             connection.close();
+            plugin.getLogger().info(Survie.ANSI_WHITE_BACKGROUND + Survie.ANSI_RED
+                    + "Déconnexion à la BDD..." + Survie.ANSI_RESET);
         }
         catch (SQLException ex)
         {
             plugin.getLogger().severe(Survie.ANSI_WHITE_BACKGROUND + Survie.ANSI_RED
                     + ex.getMessage() + Survie.ANSI_RESET);
         }
-
-        plugin.getLogger().info(Survie.ANSI_WHITE_BACKGROUND + Survie.ANSI_RED
-                + "Déconnexion à la BDD..." + Survie.ANSI_RESET);
     }
 
     private void createTables()
@@ -54,7 +52,7 @@ public class DatabaseManager
         try(Statement stmt = connection.createStatement())
         {
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS JOUEURS (UUID TEXT PRIMARY KEY NOT NULL, " +
-                    "Name TEXT NOT NULL)");
+                    "Name TEXT NOT NULL, Admin BOOLEAN NOT NULL)");
         }
         catch (SQLException ex)
         {
@@ -63,13 +61,14 @@ public class DatabaseManager
         }
     }
 
-    public void addPlayer(String uuid, String name)
+    public void addPlayer(String uuid, String name, boolean isAdmin)
     {
         try (PreparedStatement statement = connection.
                 prepareStatement("INSERT OR IGNORE INTO JOUEURS " +
-                        "(UUID, Name) VALUES (?, ?)")) {
+                        "(UUID, Name, Admin) VALUES (?, ?, ?)")) {
             statement.setString(1, uuid);
             statement.setString(2, name);
+            statement.setBoolean(3, isAdmin);
             statement.executeUpdate();
         }
         catch (SQLException ex)
@@ -98,6 +97,21 @@ public class DatabaseManager
         }
 
         return players;
+    }
+
+    public boolean isAdmin(String uuid)
+    {
+        try (PreparedStatement statement = connection.prepareStatement(
+                "SELECT Admin FROM JOUEURS WHERE UUID = ?")) {
+            statement.setString(1, uuid);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return resultSet.next();
+            }
+        } catch (SQLException ex) {
+            plugin.getLogger().severe(Survie.ANSI_WHITE_BACKGROUND + Survie.ANSI_RED
+                    + ex.getMessage() + Survie.ANSI_RESET);
+            return false;
+        }
     }
 
     public static DatabaseManager getInstance()

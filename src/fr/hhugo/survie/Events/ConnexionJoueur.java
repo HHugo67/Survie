@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.Map;
 
@@ -27,7 +28,15 @@ public class ConnexionJoueur implements Listener
     {
         Player player = e.getPlayer();
         String uuid = player.getUniqueId().toString();
-        db.addPlayer(uuid, player.getName());
+        boolean isAdmin = false;
+        if(player.hasPermission("survie.admin") || player.hasPermission("survie.*") || player.isOp())
+        {
+            isAdmin = true;
+            if(!player.hasMetadata("AdminMode"))
+                player.setMetadata("AdminMode", new FixedMetadataValue(plugin, isAdmin));
+        }
+
+        db.addPlayer(uuid, player.getName(), isAdmin);
 
         if(sc.getBoolean("survie.connexion_joueur.join"))
         {
