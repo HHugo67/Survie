@@ -12,6 +12,10 @@ survie:
     join: "&6%player% &7a rejoint la partie &8(%current%/%max%)"
     quit: "&6%player% &7a quitté la partie &8(%current%/%max%)"
 
+# Contient les messages liés à la santé du joueur
+  sante:
+    fracture: "&7Tu t'es fracturé la jambe, il te faut des soins pour éviter l'infection!"
+
 # Contient tous les messages d'erreurs
   message_erreur:
     non_joueur: "&cTu dois être un joueur pour effectuer la commande &6%command%"

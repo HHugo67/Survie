@@ -6,6 +6,7 @@ import fr.hhugo.survie.Configurations.MessagesConfig;
 import fr.hhugo.survie.Configurations.SurvieConfig;
 import fr.hhugo.survie.Database.DatabaseManager;
 import fr.hhugo.survie.Events.ConnexionJoueur;
+import fr.hhugo.survie.Events.Sante.Fracture;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -52,8 +53,8 @@ public class Survie extends JavaPlugin
     private void registerEvents()
     {
         getServer().getPluginManager().registerEvents(new ConnexionJoueur(), this);
-
         getServer().getPluginManager().registerEvents(new SurvieGUI(), this);
+        getServer().getPluginManager().registerEvents(new Fracture(), this);
     }
 
     private void registerCommands()
