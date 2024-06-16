@@ -32,17 +32,18 @@ public class AdminCommand implements CommandExecutor
             return true;
         }
 
-        if(player.hasPermission("survie.admin") || player.hasPermission("survie.*") || player.isOp())
+        String uuid = player.getUniqueId().toString();
+        if(db.isAdmin(uuid) || player.isOp())
         {
             if(player.hasMetadata("AdminMode"))
             {
                 if(player.getMetadata("AdminMode").get(0).asBoolean())
-                    player.setMetadata("AdminMode", new FixedMetadataValue(plugin, false));
+                    player.setMetadata("AdminMode", new FixedMetadataValue(Survie.getInstance(), false));
                 else
-                    player.setMetadata("AdminMode", new FixedMetadataValue(plugin, true));
+                    player.setMetadata("AdminMode", new FixedMetadataValue(Survie.getInstance(), true));
             }
             else
-                player.setMetadata("AdminMode", new FixedMetadataValue(plugin, true));
+                player.setMetadata("AdminMode", new FixedMetadataValue(Survie.getInstance(), true));
 
             replacements.put("%adminmode%", String.valueOf(player.getMetadata("AdminMode").get(0).asBoolean()));
             player.sendMessage(mc.getString("survie.admin_mode", replacements));

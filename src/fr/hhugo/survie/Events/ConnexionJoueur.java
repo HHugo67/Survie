@@ -29,11 +29,13 @@ public class ConnexionJoueur implements Listener
         Player player = e.getPlayer();
         String uuid = player.getUniqueId().toString();
         boolean isAdmin = false;
-        if(player.hasPermission("survie.admin") || player.hasPermission("survie.*") || player.isOp())
+        if(db.isAdmin(uuid) || player.isOp())
         {
             isAdmin = true;
             if(!player.hasMetadata("AdminMode"))
-                player.setMetadata("AdminMode", new FixedMetadataValue(plugin, isAdmin));
+                player.setMetadata("AdminMode", new FixedMetadataValue(Survie.getInstance(), isAdmin));
+            else if(player.getMetadata("AdminMode").isEmpty())
+                player.setMetadata("AdminMode", new FixedMetadataValue(Survie.getInstance(), isAdmin));
         }
 
         db.addPlayer(uuid, player.getName(), isAdmin);
