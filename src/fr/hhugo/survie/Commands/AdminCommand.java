@@ -42,8 +42,11 @@ public class AdminCommand implements CommandExecutor
 
             replacements.put("%adminmode%", String.valueOf(player.getMetadata("AdminMode").get(0).asBoolean()));
             player.sendMessage(mc.getString("survie.admin_mode", replacements));
+            return false;
         }
 
-        return false;
+        player.sendMessage(mc.getString("survie.message_erreur.non_permission", replacements));
+
+        return true;
     }
 }

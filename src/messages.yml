@@ -15,3 +15,4 @@ survie:
 # Contient tous les messages d'erreurs
   message_erreur:
     non_joueur: "&cTu dois être un joueur pour effectuer la commande &6%command%"
+    non_permission: "&cTu n'as pas la permission pour effectuer la commande &6%command%"
