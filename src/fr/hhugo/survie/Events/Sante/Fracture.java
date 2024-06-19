@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
@@ -21,6 +22,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Map;
 import java.util.Objects;
@@ -34,6 +36,8 @@ public class Fracture implements Listener
 
     private static final Map<String, String> replacements = Survie.replacements;
 
+    private BukkitTask tacheInfection;
+
     private static final Fracture INSTANCE = new Fracture();
 
     @EventHandler
@@ -45,13 +49,15 @@ public class Fracture implements Listener
             {
                 double chuteDistance = player.getFallDistance();
                 double chuteDegats = calculateFallDamage(player, chuteDistance);
-                if(chuteDistance >= 10.0 && chuteDegats >= 7.0)
+                if((chuteDistance >= 10.0 && chuteDegats >= 7.0) && !player.hasMetadata("Fracture"))
                 {
                     player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS,
                             PotionEffect.INFINITE_DURATION, 1));
                     String fractureMessage = mc.getString("survie.sante.fracture", replacements);
                     player.sendMessage(fractureMessage);
                     player.setMetadata("Fracture", new FixedMetadataValue(plugin, true));
+
+                    tacheInfection = Bukkit.getScheduler().runTaskLater(plugin, () -> infectPlayer(player), 20L * 60L);
                 }
             }
         }
@@ -81,17 +87,27 @@ public class Fracture implements Listener
         Player player = e.getPlayer();
         Material material = e.getItem().getType();
 
-        if(player.hasMetadata("Fracture") && player.getMetadata("Fracture").get(0).asBoolean()
+        if((player.hasMetadata("Fracture") && player.getMetadata("Fracture").get(0).asBoolean())
                 && (material == Material.MILK_BUCKET))
+        {
             Bukkit.getScheduler().runTaskLater(plugin, () -> player.addPotionEffect(
                     new PotionEffect(PotionEffectType.SLOWNESS, PotionEffect.INFINITE_DURATION, 1)), 1L);
+
+            if(player.hasMetadata("Fracture") && player.getMetadata("Fracture").get(0).asBoolean())
+            {
+                Bukkit.getScheduler().runTaskLater(plugin, () -> player.addPotionEffect(
+                        new PotionEffect(PotionEffectType.WEAKNESS, PotionEffect.INFINITE_DURATION, 0)), 1L);
+                Bukkit.getScheduler().runTaskLater(plugin, () -> player.addPotionEffect(
+                        new PotionEffect(PotionEffectType.POISON, PotionEffect.INFINITE_DURATION, 0)), 1L);
+            }
+        }
     }
 
     public void craftBandage()
     {
         ItemStack bandage = new ItemStack(Material.PAPER, 1);
         ItemMeta bandageMeta = bandage.getItemMeta();
-        bandageMeta.setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "Bandage");
+        Objects.requireNonNull(bandageMeta).setDisplayName(ChatColor.WHITE + "" + ChatColor.BOLD + "Bandage");
         bandage.setItemMeta(bandageMeta);
 
         NamespacedKey bandageKey = new NamespacedKey(plugin, "Bandage");
@@ -115,6 +131,11 @@ public class Fracture implements Listener
         {
             if(player.hasMetadata("Fracture"))
             {
+                if(tacheInfection != null)
+                {
+                    tacheInfection.cancel();
+                    tacheInfection = null;
+                }
                 player.removeMetadata("Fracture", plugin);
                 player.removePotionEffect(PotionEffectType.SLOWNESS);
                 String guerisonMessage = mc.getString("survie.sante.guerison", replacements);
@@ -124,8 +145,31 @@ public class Fracture implements Listener
         }
     }
 
+    private void infectPlayer(Player player)
+    {
+        plugin.getLogger().info("Joueur " + player.getName() + " infecté!");
+        player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, PotionEffect.INFINITE_DURATION, 0));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, PotionEffect.INFINITE_DURATION, 0));
+
+        player.setMetadata("Infection", new FixedMetadataValue(plugin, true));
+
+        String infectionMessage = mc.getString("survie.sante.infection", replacements);
+        player.sendMessage(infectionMessage);
+    }
+
+    @EventHandler
+    public void onDeath(PlayerDeathEvent e)
+    {
+        Player player = e.getEntity();
+        if (player.hasMetadata("Fracture") || player.hasMetadata("Infection")) {
+            player.removeMetadata("Fracture", plugin);
+            player.removeMetadata("Infection", plugin);
+        }
+    }
+
     public static Fracture getInstance()
     {
         return INSTANCE;
     }
+
 }

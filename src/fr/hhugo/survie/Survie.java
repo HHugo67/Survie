@@ -36,6 +36,7 @@ public class Survie extends JavaPlugin
         loadRecipes();
         registerEvents();
         registerCommands();
+        runTasks();
 
         getLogger().info(ANSI_WHITE_BACKGROUND + ANSI_GREEN + "Le plugin de Survie est actif" + ANSI_RESET);
     }
@@ -62,6 +63,11 @@ public class Survie extends JavaPlugin
     {
         Objects.requireNonNull(getCommand("gui")).setExecutor(new SurvieGUI());
         Objects.requireNonNull(getCommand("admin")).setExecutor(new AdminCommand());
+    }
+
+    private void runTasks()
+    {
+
     }
 
     private void loadRecipes()
