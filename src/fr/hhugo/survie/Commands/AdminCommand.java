@@ -4,6 +4,7 @@ import fr.hhugo.survie.Configurations.MessagesConfig;
 import fr.hhugo.survie.Configurations.SurvieConfig;
 import fr.hhugo.survie.Database.DatabaseManager;
 import fr.hhugo.survie.Survie;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -49,8 +50,8 @@ public class AdminCommand implements CommandExecutor
             player.sendMessage(mc.getString("survie.admin_mode", replacements));
             return false;
         }
-
-        player.sendMessage(mc.getString("survie.message_erreur.non_permission", replacements));
+        else
+            player.sendMessage(mc.getString("survie.message_erreur.non_permission", replacements));
 
         return true;
     }

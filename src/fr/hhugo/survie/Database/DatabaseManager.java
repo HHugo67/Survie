@@ -105,7 +105,10 @@ public class DatabaseManager
                 "SELECT Admin FROM JOUEURS WHERE UUID = ?")) {
             statement.setString(1, uuid);
             try (ResultSet resultSet = statement.executeQuery()) {
-                return resultSet.next();
+                if(resultSet.next())
+                    return resultSet.getBoolean("Admin");
+                else
+                    return false;
             }
         } catch (SQLException ex) {
             plugin.getLogger().severe(Survie.ANSI_WHITE_BACKGROUND + Survie.ANSI_RED
