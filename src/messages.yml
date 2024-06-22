@@ -2,7 +2,18 @@ survie:
 
 # Contient les messages d'activation/désactivation du mode admin
 # Mettre %adminmode% pour avoir l'état de la fonctionnalité (true/false)
-  admin_mode: "&aLe mode admin est &6%adminmode%"
+# Mettre %target% pour avoir le joueur ciblé
+# Mettre %prefix% pour avoir le prefix du rang Administrateur
+  rang:
+    admin:
+      prefix: "&c&lAdmin"
+      mode: "&aLe mode admin est &6%adminmode%"
+      add: "&6%target% &aest désormais %prefix%"
+      joueur_add: "&aTu es désormais %prefix%!"
+      deja_admin: "&6%target% &cest déjà %prefix%"
+      remove: "&6%target% &an'est désormais plus %prefix%"
+      joueur_remove: "&aTu n'es désormais plus %prefix%!"
+      deja_non_admin: "&6%target% &cn'est déjà pas %prefix%"
 
 # Contient les messages de join et quit s'il sont actifs
 # Mettre %player% pour avoir le nom du joueur
@@ -22,3 +33,4 @@ survie:
   message_erreur:
     non_joueur: "&cTu dois être un joueur pour effectuer la commande &6%command%"
     non_permission: "&cTu n'as pas la permission pour effectuer la commande &6%command%"
+    joueur_inconnu: "&6%target% &cn'existe pas ou n'est pas connecté!"

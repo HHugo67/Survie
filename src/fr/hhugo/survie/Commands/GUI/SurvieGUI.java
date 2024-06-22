@@ -46,8 +46,7 @@ public class SurvieGUI implements CommandExecutor, Listener
         String uuid = player.getUniqueId().toString();
         Inventory inventaire;
 
-        if((player.hasPermission("survie.admin") || player.hasPermission("survie.*") || player.isOp())
-                && db.isAdmin(uuid)
+        if((db.isAdmin(uuid) || player.isOp())
                 && (player.hasMetadata("AdminMode") && player.getMetadata("AdminMode").get(0).asBoolean()))
         {
             inventaire = Bukkit.createInventory(player, TAILLE_GUI,

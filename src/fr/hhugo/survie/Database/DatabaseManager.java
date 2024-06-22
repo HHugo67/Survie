@@ -117,6 +117,21 @@ public class DatabaseManager
         }
     }
 
+    public boolean setAdmin(String uuid, boolean isAdmin)
+    {
+        String sql = "UPDATE JOUEURS SET Admin = ? WHERE UUID = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setBoolean(1, isAdmin);
+            statement.setString(2, uuid);
+            int rowsUpdated = statement.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException ex) {
+            plugin.getLogger().severe(Survie.ANSI_WHITE_BACKGROUND + Survie.ANSI_RED
+                    + ex.getMessage() + Survie.ANSI_RESET);
+            return false;
+        }
+    }
+
     public static DatabaseManager getInstance()
     {
         return INSTANCE;

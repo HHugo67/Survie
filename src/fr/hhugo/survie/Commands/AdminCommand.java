@@ -5,6 +5,7 @@ import fr.hhugo.survie.Configurations.SurvieConfig;
 import fr.hhugo.survie.Database.DatabaseManager;
 import fr.hhugo.survie.Survie;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -36,23 +37,117 @@ public class AdminCommand implements CommandExecutor
         String uuid = player.getUniqueId().toString();
         if(db.isAdmin(uuid) || player.isOp())
         {
-            if(player.hasMetadata("AdminMode"))
+            if(args.length == 0)
             {
-                if(player.getMetadata("AdminMode").get(0).asBoolean())
-                    player.setMetadata("AdminMode", new FixedMetadataValue(Survie.getInstance(), false));
-                else
-                    player.setMetadata("AdminMode", new FixedMetadataValue(Survie.getInstance(), true));
-            }
-            else
-                player.setMetadata("AdminMode", new FixedMetadataValue(Survie.getInstance(), true));
+                setAdminMetadata(player);
 
-            replacements.put("%adminmode%", String.valueOf(player.getMetadata("AdminMode").get(0).asBoolean()));
-            player.sendMessage(mc.getString("survie.admin_mode", replacements));
+                replacements.put("%adminmode%", String.valueOf(player.getMetadata("AdminMode").get(0).asBoolean()));
+                String adminModeMessage = mc.getString("survie.rang.admin.mode", replacements);
+                player.sendMessage(adminModeMessage);
+                return false;
+            }
+            if(args.length == 2)
+            {
+                String adminPrefix = mc.getString("survie.rang.admin.prefix", replacements);
+                replacements.put("%prefix%", adminPrefix);
+
+                Player cible = Bukkit.getPlayer(args[1]);
+                replacements.put("%target%", args[1]);
+                if(cible == null)
+                {
+                    String mauvaiseCible = mc.getString("survie.message_erreur.joueur_inconnu", replacements);
+                    player.sendMessage(mauvaiseCible);
+                    return false;
+                }
+
+                String cibleUuid = cible.getUniqueId().toString();
+
+                switch(args[0])
+                {
+                    case "add":
+                        if(db.isAdmin(cibleUuid))
+                        {
+                            String dejaAdminMessage = mc.getString("survie.rang.admin.deja_admin", replacements);
+                            player.sendMessage(dejaAdminMessage);
+                            return false;
+                        }
+
+                        if(db.setAdmin(cibleUuid, true))
+                        {
+                            setAdminMetadata(cible);
+                            String cibleAdminMessage = mc.getString("survie.rang.admin.add", replacements);
+                            String joueurAdminMessage = mc.getString("survie.rang.admin.joueur_add", replacements);
+                            player.sendMessage(cibleAdminMessage);
+                            cible.sendMessage(joueurAdminMessage);
+                        }
+                        else
+                        {
+                            Bukkit.broadcastMessage(ChatColor.RED + "Impossible de mettre " +
+                                    ChatColor.GOLD + cible.getName() + ChatColor.RED +
+                                    "administrateur");
+                        }
+                        return false;
+
+                    case "remove":
+                        if(!db.isAdmin(cibleUuid))
+                        {
+                            String dejaNonAdminMessage = mc.getString("survie.rang.admin.deja_non_admin", replacements);
+                            player.sendMessage(dejaNonAdminMessage);
+                            return false;
+                        }
+
+                        if(db.setAdmin(cibleUuid, false))
+                        {
+                            if(!cible.isOp())
+                                removeAdminMetadata(cible);
+                            String cibleAdminMessage = mc.getString("survie.rang.admin.remove", replacements);
+                            String joueurAdminMessage = mc.getString("survie.rang.admin.joueur_remove", replacements);
+                            player.sendMessage(cibleAdminMessage);
+                            cible.sendMessage(joueurAdminMessage);
+                        }
+                        else
+                        {
+                            Bukkit.broadcastMessage(ChatColor.RED + "Impossible de mettre " +
+                                    ChatColor.GOLD + cible.getName() + ChatColor.RED +
+                                    "administrateur");
+                        }
+                        return false;
+
+
+                    default:
+                        player.sendMessage(ChatColor.RED + "Usage: /admin <add/remove> <joueur>");
+                        return false;
+                }
+            }
             return false;
         }
         else
             player.sendMessage(mc.getString("survie.message_erreur.non_permission", replacements));
 
+
         return true;
+    }
+
+
+    private void setAdminMetadata(Player player)
+    {
+        if(player.hasMetadata("AdminMode"))
+        {
+            if(player.getMetadata("AdminMode").get(0) == null)
+                player.setMetadata("AdminMode", new FixedMetadataValue(Survie.getInstance(), true));
+
+            if(player.getMetadata("AdminMode").get(0).asBoolean())
+                player.setMetadata("AdminMode", new FixedMetadataValue(Survie.getInstance(), false));
+            else
+                player.setMetadata("AdminMode", new FixedMetadataValue(Survie.getInstance(), true));
+        }
+        else
+            player.setMetadata("AdminMode", new FixedMetadataValue(Survie.getInstance(), true));
+    }
+
+    private void removeAdminMetadata(Player player)
+    {
+        if(player.hasMetadata("AdminMode"))
+            player.removeMetadata("AdminMode", plugin);
     }
 }
