@@ -9,13 +9,15 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-public class AdminCommand implements CommandExecutor
-{
+public class AdminCommand implements CommandExecutor, TabCompleter {
 
     private static final Survie plugin = Survie.getInstance();
     private static final MessagesConfig mc = MessagesConfig.getInstance();
@@ -124,7 +126,6 @@ public class AdminCommand implements CommandExecutor
         else
             player.sendMessage(mc.getString("survie.message_erreur.non_permission", replacements));
 
-
         return true;
     }
 
@@ -149,5 +150,37 @@ public class AdminCommand implements CommandExecutor
     {
         if(player.hasMetadata("AdminMode"))
             player.removeMetadata("AdminMode", plugin);
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String str, String[] args)
+    {
+        List<String> completer = new ArrayList<String>();
+
+        if(!(sender instanceof Player player))
+            return completer;
+
+        String uuid = player.getUniqueId().toString();
+        if(db.isAdmin(uuid) || player.isOp())
+        {
+            if(args.length == 1)
+            {
+                completer.clear();
+                completer.add("add");
+                completer.add("remove");
+            }
+            else if(args.length == 2)
+            {
+                completer.clear();
+                for(Player players : Bukkit.getOnlinePlayers())
+                    completer.add(players.getName());
+            }
+            else
+            {
+                completer.clear();
+            }
+        }
+
+        return completer;
     }
 }
