@@ -5,8 +5,10 @@ survie:
 # Mettre %target% pour avoir le joueur ciblé
 # Mettre %prefix% pour avoir le prefix du rang Administrateur
   rang:
+    joueur:
+      prefix: "&f&lJoueur&f"
     admin:
-      prefix: "&c&lAdmin"
+      prefix: "&c&lAdmin&c"
       mode: "&aLe mode admin est &6%adminmode%"
       add: "&6%target% &aest désormais %prefix%"
       joueur_add: "&aTu es désormais %prefix%!"

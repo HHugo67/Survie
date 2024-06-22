@@ -3,6 +3,13 @@ survie:
 # Chemin vers la base de données
   database: "SurvieBDD.db"
 
+# Permet de personnaliser les messages du chat
+# Mettre %rank% pour avoir le rang du joueur
+# Mettre %player% pour avoir le pseudo du joueur
+# Mettre %message% pour avoir le message du joueur
+  chat:
+    format: "%rank%%player% &7» %message%"
+
 # Permet de d'activer/désactiver le message de join/quit
   connexion_joueur:
     join: true
