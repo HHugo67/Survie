@@ -51,8 +51,8 @@ public class DatabaseManager
     {
         try(Statement stmt = connection.createStatement())
         {
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS JOUEURS (UUID TEXT PRIMARY KEY NOT NULL, " +
-                    "Name TEXT NOT NULL, Admin BOOLEAN NOT NULL)");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS JOUEURS (UUID TEXT PRIMARY KEY UNIQUE NOT NULL, " +
+                    "Name TEXT UNIQUE NOT NULL, Admin BOOLEAN NOT NULL)");
         }
         catch (SQLException ex)
         {
@@ -76,6 +76,44 @@ public class DatabaseManager
             plugin.getLogger().severe(Survie.ANSI_WHITE_BACKGROUND + Survie.ANSI_RED
                     + ex.getMessage() + Survie.ANSI_RESET);
         }
+    }
+
+    public UUID getPlayerUUID(String name)
+    {
+        String sql = "SELECT UUID FROM JOUEURS WHERE Name = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, name);
+            try(ResultSet rs = statement.executeQuery())
+            {
+                if(rs.next())
+                {
+                    String uuid = rs.getString("UUID");
+                    return UUID.fromString(uuid);
+                }
+
+            }
+        } catch (SQLException ex) {
+            plugin.getLogger().severe(Survie.ANSI_WHITE_BACKGROUND + Survie.ANSI_RED
+                    + ex.getMessage() + Survie.ANSI_RESET);
+        }
+        return null;
+    }
+
+    public String getPlayerName(String uuid)
+    {
+        String sql = "SELECT Name FROM JOUEURS WHERE UUID = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, uuid);
+            try(ResultSet rs = statement.executeQuery())
+            {
+                if(rs.next())
+                    return rs.getString("Name");
+            }
+        } catch (SQLException ex) {
+            plugin.getLogger().severe(Survie.ANSI_WHITE_BACKGROUND + Survie.ANSI_RED
+                    + ex.getMessage() + Survie.ANSI_RESET);
+        }
+        return null;
     }
 
     public List<UUID> getAllPlayers()
@@ -130,6 +168,28 @@ public class DatabaseManager
                     + ex.getMessage() + Survie.ANSI_RESET);
             return false;
         }
+    }
+
+    public List<UUID> getAllAdmins()
+    {
+        List<UUID> players = new ArrayList<>();
+        String sql = "SELECT UUID FROM JOUEURS WHERE Admin = 1";
+        try(Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql))
+        {
+            while(resultSet.next())
+            {
+                UUID uuid = UUID.fromString(resultSet.getString("UUID"));
+                players.add(uuid);
+            }
+        }
+        catch (SQLException ex)
+        {
+            plugin.getLogger().severe(Survie.ANSI_WHITE_BACKGROUND + Survie.ANSI_RED
+                    + ex.getMessage() + Survie.ANSI_RESET);
+        }
+
+        return players;
     }
 
     public static DatabaseManager getInstance()
