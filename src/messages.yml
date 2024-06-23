@@ -27,9 +27,12 @@ survie:
 
 # Contient les messages liés à la santé du joueur
   sante:
-    fracture: "&7Tu t'es fracturé la jambe, il te faut des soins pour éviter l'infection!"
-    infection: "&7Tu es infecté car tu n'as pas soigné ta fracture!"
-    guerison: "&aTu es maintenant guéri!"
+    fracture:
+      blessure: "&7Tu t'es fracturé la jambe, il te faut des soins pour éviter l'infection!"
+      guerison: "&aTa fracture est maintenant guérie!"
+    infection:
+      blessure: "&7Tu es infecté car tu n'as pas soigné ta fracture!"
+      guerison: "&aTon infection est maintenant guérie!"
 
 # Contient tous les messages d'erreurs
   message_erreur:

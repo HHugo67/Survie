@@ -61,7 +61,7 @@ public class Fracture implements Listener
                     {
                         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS,
                                 PotionEffect.INFINITE_DURATION, 1));
-                        String fractureMessage = mc.getString("survie.sante.fracture", replacements);
+                        String fractureMessage = mc.getString("survie.sante.fracture.blessure", replacements);
                         player.sendMessage(fractureMessage);
                         player.setMetadata("Fracture", new FixedMetadataValue(plugin, true));
 
@@ -96,19 +96,29 @@ public class Fracture implements Listener
         Player player = e.getPlayer();
         Material material = e.getItem().getType();
 
-        if((player.hasMetadata("Fracture") && player.getMetadata("Fracture").get(0).asBoolean())
-                && (material == Material.MILK_BUCKET))
+        if(player.hasMetadata("Fracture") && material == Material.MILK_BUCKET)
         {
             Bukkit.getScheduler().runTaskLater(plugin, () -> player.addPotionEffect(
-                    new PotionEffect(PotionEffectType.SLOWNESS, PotionEffect.INFINITE_DURATION, 1)), 1L);
+                    new PotionEffect(PotionEffectType.SLOWNESS, PotionEffect.INFINITE_DURATION, 1)), 0L);
 
-            if(player.hasMetadata("Fracture") && player.getMetadata("Fracture").get(0).asBoolean())
+            if(player.hasMetadata("Fracture"))
             {
                 Bukkit.getScheduler().runTaskLater(plugin, () -> player.addPotionEffect(
-                        new PotionEffect(PotionEffectType.WEAKNESS, PotionEffect.INFINITE_DURATION, 0)), 1L);
+                        new PotionEffect(PotionEffectType.WEAKNESS, PotionEffect.INFINITE_DURATION, 0)), 0L);
                 Bukkit.getScheduler().runTaskLater(plugin, () -> player.addPotionEffect(
-                        new PotionEffect(PotionEffectType.POISON, PotionEffect.INFINITE_DURATION, 0)), 1L);
+                        new PotionEffect(PotionEffectType.POISON, PotionEffect.INFINITE_DURATION, 0)), 0L);
             }
+        }
+
+        if(player.hasMetadata("Infection") && material == Material.GOLDEN_APPLE)
+        {
+            player.removePotionEffect(PotionEffectType.WEAKNESS);
+            player.removePotionEffect(PotionEffectType.POISON);
+            player.removeMetadata("Infection", plugin);
+            String guerisonMessage = mc.getString("survie.sante.infection.guerison", replacements);
+            player.sendMessage(guerisonMessage);
+            if(player.hasMetadata("Fracture"))
+                tacheInfection = Bukkit.getScheduler().runTaskLater(plugin, () -> infectPlayer(player), 20L * 60L);
         }
     }
 
@@ -147,7 +157,7 @@ public class Fracture implements Listener
                 }
                 player.removeMetadata("Fracture", plugin);
                 player.removePotionEffect(PotionEffectType.SLOWNESS);
-                String guerisonMessage = mc.getString("survie.sante.guerison", replacements);
+                String guerisonMessage = mc.getString("survie.sante.fracture.guerison", replacements);
                 player.sendMessage(guerisonMessage);
                 item.setAmount(item.getAmount() - 1);
             }
@@ -162,7 +172,7 @@ public class Fracture implements Listener
 
         player.setMetadata("Infection", new FixedMetadataValue(plugin, true));
 
-        String infectionMessage = mc.getString("survie.sante.infection", replacements);
+        String infectionMessage = mc.getString("survie.sante.infection.blessure", replacements);
         player.sendMessage(infectionMessage);
     }
 
