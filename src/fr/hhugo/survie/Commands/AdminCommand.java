@@ -173,7 +173,12 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
             {
                 completer.clear();
                 for(Player players : Bukkit.getOnlinePlayers())
+                {
+                    String playersUuid = players.getUniqueId().toString();
+                    if(db.isAdmin(playersUuid))
+                        continue;
                     completer.add(players.getName());
+                }
             }
             else
             {
