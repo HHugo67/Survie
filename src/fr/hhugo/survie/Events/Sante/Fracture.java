@@ -53,15 +53,20 @@ public class Fracture implements Listener
             {
                 double chuteDistance = player.getFallDistance();
                 double chuteDegats = calculateFallDamage(player, chuteDistance);
-                if((chuteDistance >= 10.0 && chuteDegats >= 7.0) && !player.hasMetadata("Fracture"))
+                if(!player.hasMetadata("AdminMode") ||
+                        (player.hasMetadata("AdminMode") && !player.getMetadata("AdminMode").isEmpty()) &&
+                                !player.getMetadata("AdminMode").get(0).asBoolean())
                 {
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS,
-                            PotionEffect.INFINITE_DURATION, 1));
-                    String fractureMessage = mc.getString("survie.sante.fracture", replacements);
-                    player.sendMessage(fractureMessage);
-                    player.setMetadata("Fracture", new FixedMetadataValue(plugin, true));
+                    if((chuteDistance >= 10.0 && chuteDegats >= 7.0) && !player.hasMetadata("Fracture"))
+                    {
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS,
+                                PotionEffect.INFINITE_DURATION, 1));
+                        String fractureMessage = mc.getString("survie.sante.fracture", replacements);
+                        player.sendMessage(fractureMessage);
+                        player.setMetadata("Fracture", new FixedMetadataValue(plugin, true));
 
-                    tacheInfection = Bukkit.getScheduler().runTaskLater(plugin, () -> infectPlayer(player), 20L * 60L);
+                        tacheInfection = Bukkit.getScheduler().runTaskLater(plugin, () -> infectPlayer(player), 20L * 60L);
+                    }
                 }
             }
         }
