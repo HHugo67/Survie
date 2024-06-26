@@ -41,5 +41,7 @@ survie:
   agriculture:
     houe_plantations:
       name: "&6Super Houe"
+      durability: 25
       lore:
         - "&8Permet de planter sur 3x3 blocs"
+        - "&8Utilisations restantes : &6%amount%"

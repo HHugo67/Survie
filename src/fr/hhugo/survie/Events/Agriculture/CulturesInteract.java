@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
@@ -33,7 +34,7 @@ public class CulturesInteract implements Listener
         ItemStack itemMain = player.getInventory().getItemInMainHand();
         if(isHoue(itemMain))
         {
-            if(e.getAction() == Action.RIGHT_CLICK_BLOCK)
+            if(e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getHand() == EquipmentSlot.HAND)
             {
                 Block block = e.getClickedBlock();
                 if(block != null && isCulture(block))

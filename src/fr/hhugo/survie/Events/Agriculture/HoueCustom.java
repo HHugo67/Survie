@@ -5,6 +5,7 @@ import fr.hhugo.survie.Configurations.SurvieConfig;
 import fr.hhugo.survie.Database.DatabaseManager;
 import fr.hhugo.survie.Survie;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -17,9 +18,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -36,19 +36,21 @@ public class HoueCustom implements Listener, CommandExecutor
             Material.WHEAT_SEEDS, Material.WHEAT,
             Material.CARROT, Material.CARROTS,
             Material.POTATO, Material.POTATOES,
-            Material.BEETROOT_SEEDS, Material.BEETROOTS,
-            Material.MELON_SEEDS, Material.MELON_STEM,
-            Material.PUMPKIN_SEEDS, Material.PUMPKIN_STEM
+            Material.BEETROOT_SEEDS, Material.BEETROOTS
     );
 
     private ItemStack creerHouePlantations()
     {
         ItemStack houe = new ItemStack(Material.GOLDEN_HOE);
         ItemMeta meta = houe.getItemMeta();
+        int durabilite = sc.getInt("survie.agriculture.houe_plantations.durability");
         if(meta != null)
         {
             String houeName = sc.getString("survie.agriculture.houe_plantations.name", replacements);
             meta.setDisplayName(houeName);
+            meta.getPersistentDataContainer().set(new NamespacedKey(plugin, "Durabilite"),
+                    PersistentDataType.INTEGER, durabilite);
+            replacements.put("%amount%", String.valueOf(durabilite));
             List<String> houeLore = sc.getStringList("survie.agriculture.houe_plantations.lore", replacements);
             meta.setLore(houeLore);
             meta.setUnbreakable(true);
@@ -67,13 +69,34 @@ public class HoueCustom implements Listener, CommandExecutor
         ItemStack itemMain = player.getInventory().getItemInMainHand();
         if(isCustomHoue(itemMain))
         {
-            if(e.getAction() != Action.RIGHT_CLICK_BLOCK || e.getHand() != EquipmentSlot.HAND) return;
-
-            Block block = e.getClickedBlock();
-            if(block != null)
+            if(e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getHand() == EquipmentSlot.HAND)
             {
-                planterGraines(player, block);
-                //reduireDurabilite(player, itemMain);
+                Block block = e.getClickedBlock();
+                if(block != null)
+                {
+                    ItemMeta meta = itemMain.getItemMeta();
+                    if(meta == null) return;
+                    Integer durabilite = meta.getPersistentDataContainer().get(
+                            new NamespacedKey(plugin, "Durabilite"), PersistentDataType.INTEGER);
+                    if(durabilite != null && durabilite > 0)
+                    {
+                        if(planterGraines(player, block))
+                        {
+                            meta.getPersistentDataContainer().set(new NamespacedKey(plugin, "Durabilite"),
+                                    PersistentDataType.INTEGER, durabilite - 1);
+                            replacements.put("%amount%", String.valueOf(durabilite - 1));
+                            List<String> houeLore = sc.getStringList("survie.agriculture.houe_plantations.lore",
+                                    replacements);
+                            meta.setLore(houeLore);
+                            itemMain.setItemMeta(meta);
+                        }
+                    }
+                    if(durabilite != null && durabilite <= 0)
+                    {
+                        itemMain.setAmount(0);
+                        player.sendMessage("Ta super houe est cassée!");
+                    }
+                }
             }
         }
     }
@@ -114,8 +137,9 @@ public class HoueCustom implements Listener, CommandExecutor
         return true;
     }
 
-    private void planterGraines(Player player, Block block)
+    private boolean planterGraines(Player player, Block block)
     {
+        boolean resultat = false;
         for(int x = -1; x <= 1; x++)
         {
             for(int z = -1; z <= 1; z++)
@@ -132,11 +156,14 @@ public class HoueCustom implements Listener, CommandExecutor
                         {
                             blockCible.getRelative(0, 1, 0).setType(graine);
                             removeCultureInventaire(player, cultureType);
+                            resultat = true;
                         }
                     }
                 }
             }
         }
+
+        return resultat;
     }
 
     private Material getCulturesJoueur(Player player)
@@ -163,36 +190,6 @@ public class HoueCustom implements Listener, CommandExecutor
                 return;
             }
         }
-    }
-
-    private void reduireDurabilite(Player player, ItemStack customHoue)
-    {
-        ItemMeta meta = customHoue.getItemMeta();
-        if(meta == null) return;
-        List<String> houeLore = meta.getLore();
-        if(houeLore == null || houeLore.isEmpty()) return;
-
-        for(int i = 0; i < houeLore.size(); i++)
-        {
-            String ligne = houeLore.get(i);
-            if(ligne.contains("%amount%"))
-            {
-                int utilRestantes = Integer.parseInt(ligne.replaceAll("\\D+", ""));
-                utilRestantes --;
-
-                if(utilRestantes <= 0)
-                {
-                    player.getInventory().remove(customHoue);
-                    return;
-                }
-
-                replacements.put("%amount%", String.valueOf(utilRestantes));
-                houeLore = sc.getStringList("survie.agriculture.houe_plantations.lore", replacements);
-                meta.setLore(houeLore);
-            }
-        }
-
-        customHoue.setItemMeta(meta);
     }
 
     @Override
