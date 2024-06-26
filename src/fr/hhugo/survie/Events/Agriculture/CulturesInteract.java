@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
 
-public class Cultures implements Listener
+public class CulturesInteract implements Listener
 {
     private static final Survie plugin = Survie.getInstance();
     private static final MessagesConfig mc = MessagesConfig.getInstance();

@@ -5,7 +5,8 @@ import fr.hhugo.survie.Commands.GUI.SurvieGUI;
 import fr.hhugo.survie.Configurations.MessagesConfig;
 import fr.hhugo.survie.Configurations.SurvieConfig;
 import fr.hhugo.survie.Database.DatabaseManager;
-import fr.hhugo.survie.Events.Agriculture.Cultures;
+import fr.hhugo.survie.Events.Agriculture.CulturesInteract;
+import fr.hhugo.survie.Events.Agriculture.HoueCustom;
 import fr.hhugo.survie.Events.Chat.ChatListener;
 import fr.hhugo.survie.Events.ConnexionJoueur;
 import fr.hhugo.survie.Events.Sante.Fracture;
@@ -64,13 +65,15 @@ public class Survie extends JavaPlugin
         getServer().getPluginManager().registerEvents(new SurvieGUI(), this);
         getServer().getPluginManager().registerEvents(new Fracture(), this);
         getServer().getPluginManager().registerEvents(new ChatListener(), this);
-        getServer().getPluginManager().registerEvents(new Cultures(), this);
+        getServer().getPluginManager().registerEvents(new CulturesInteract(), this);
+        getServer().getPluginManager().registerEvents(new HoueCustom(), this);
     }
 
     private void registerCommands()
     {
         Objects.requireNonNull(getCommand("gui")).setExecutor(new SurvieGUI());
         Objects.requireNonNull(getCommand("admin")).setExecutor(new AdminCommand());
+        Objects.requireNonNull(getCommand("customhoe")).setExecutor(new HoueCustom());
     }
 
     private void setTabCompleter()

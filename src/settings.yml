@@ -35,3 +35,11 @@ survie:
 # Permet de personnalier le GUI du profil du joueur
   gui_joueur:
     name: "&8Profil de &6%player%"
+
+# Permet de personnaliser la houe de plantations
+# Mettre %amount% pour avoir le montant d'utilisations
+  agriculture:
+    houe_plantations:
+      name: "&6Super Houe"
+      lore:
+        - "&8Permet de planter sur 3x3 blocs"

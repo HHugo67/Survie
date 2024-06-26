@@ -8,3 +8,5 @@ commands:
     description: Passe en mode administrateur
   gui:
     description: Configure le plugin depuis un menu
+  customhoe:
+    description: Recevoir la houe custom
