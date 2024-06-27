@@ -94,7 +94,9 @@ public class HoueCustom implements Listener, CommandExecutor
                     if(durabilite != null && durabilite <= 0)
                     {
                         itemMain.setAmount(0);
-                        player.sendMessage("Ta super houe est cassée!");
+                        String houeCasseeMessage = mc.getString("survie.agriculture.houe_custom.break",
+                                replacements);
+                        player.sendMessage(houeCasseeMessage);
                     }
                 }
             }
@@ -202,8 +204,15 @@ public class HoueCustom implements Listener, CommandExecutor
             return true;
         }
 
-        player.getInventory().addItem(creerHouePlantations());
-        player.sendMessage("Tu as reçu la houe custom!");
+        String uuid = player.getUniqueId().toString();
+        if(db.isAdmin(uuid) || player.isOp())
+        {
+            player.getInventory().addItem(creerHouePlantations());
+            String houeCoustomMessage = mc.getString("survie.agriculture.houe_custom.receive", replacements);
+            player.sendMessage(houeCoustomMessage);
+        }
+        else
+            player.sendMessage(mc.getString("survie.message_erreur.non_permission", replacements));
 
         return false;
     }

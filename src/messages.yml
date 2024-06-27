@@ -34,6 +34,12 @@ survie:
       blessure: "&7Tu es infecté car tu n'as pas soigné ta fracture!"
       guerison: "&aTon infection est maintenant guérie!"
 
+# Contient les messages liés à l'agriculture
+  agriculture:
+    houe_custom:
+      receive: "&aTu as reçu la super houe"
+      break: "&aTa super houe s'est cassée"
+
 # Contient tous les messages d'erreurs
   message_erreur:
     non_joueur: "&cTu dois être un joueur pour effectuer la commande &6%command%"
