@@ -138,17 +138,15 @@ public class CoinsCommand implements CommandExecutor, TabCompleter
             return false;
         }
 
+        String usageMessage = "Usage: /coins <pay> <player> <amount>";
         if(args.length < 3)
         {
-            String usageMessage = "Usage: /coins <pay> <player> <amount>";
             player.sendMessage(ChatColor.RED + usageMessage);
             return true;
         }
 
         if(args.length == 3 && args[0].equalsIgnoreCase("pay"))
         {
-            String usageMessage = "Usage: /coins <pay> <player> <amount>";
-
             Player cible = Bukkit.getPlayer(args[1]);
             if(cible == null)
             {
@@ -198,7 +196,6 @@ public class CoinsCommand implements CommandExecutor, TabCompleter
         }
         else
         {
-            String usageMessage = "Usage: /coins <pay> <player> <amount>";
             player.sendMessage(ChatColor.RED + usageMessage);
             return true;
         }
