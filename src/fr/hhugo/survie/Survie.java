@@ -1,6 +1,7 @@
 package fr.hhugo.survie;
 
 import fr.hhugo.survie.Commands.AdminCommand;
+import fr.hhugo.survie.Commands.Coins.CoinsCommand;
 import fr.hhugo.survie.Commands.GUI.SurvieGUI;
 import fr.hhugo.survie.Configurations.MessagesConfig;
 import fr.hhugo.survie.Configurations.SurvieConfig;
@@ -74,11 +75,13 @@ public class Survie extends JavaPlugin
         Objects.requireNonNull(getCommand("gui")).setExecutor(new SurvieGUI());
         Objects.requireNonNull(getCommand("admin")).setExecutor(new AdminCommand());
         Objects.requireNonNull(getCommand("customhoe")).setExecutor(new HoueCustom());
+        Objects.requireNonNull(getCommand("coins")).setExecutor(new CoinsCommand());
     }
 
     private void setTabCompleter()
     {
         Objects.requireNonNull(getCommand("admin")).setTabCompleter(new AdminCommand());
+        Objects.requireNonNull(getCommand("coins")).setTabCompleter(new CoinsCommand());
     }
 
     private void runTasks()
@@ -91,8 +94,19 @@ public class Survie extends JavaPlugin
         Fracture.getInstance().craftBandage();
     }
 
-    public void sendActionBar(Player player, String message) {
+    public void sendActionBar(Player player, String message)
+    {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacy(message));
+    }
+
+    public boolean isInteger(String str)
+    {
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     public static Survie getInstance()

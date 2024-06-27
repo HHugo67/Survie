@@ -64,8 +64,8 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                     UUID cibleOfflineUuid = db.getPlayerUUID(args[1]);
                     if(cibleOfflineUuid == null)
                     {
-                        String mauvaiseCible = mc.getString("survie.message_erreur.joueur_inconnu", replacements);
-                        player.sendMessage(mauvaiseCible);
+                        String mauvaiseCibleMessage = mc.getString("survie.message_erreur.joueur_inconnu", replacements);
+                        player.sendMessage(mauvaiseCibleMessage);
                         return true;
                     }
                     else
@@ -181,7 +181,6 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         {
             if(args.length == 1)
             {
-                completer.clear();
                 completer.add("add");
                 completer.add("remove");
             }
@@ -189,7 +188,6 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
             {
                 if(args[0].equalsIgnoreCase("add"))
                 {
-                    completer.clear();
                     for(Player players : Bukkit.getOnlinePlayers())
                     {
                         String playersUuid = players.getUniqueId().toString();
@@ -200,7 +198,6 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 }
                 else if(args[0].equalsIgnoreCase("remove"))
                 {
-                    completer.clear();
                     for(UUID uuids : db.getAllAdmins())
                     {
                         String playersUuid = uuids.toString();
@@ -210,14 +207,6 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                         completer.add(pseudo);
                     }
                 }
-                else
-                {
-                    completer.clear();
-                }
-            }
-            else
-            {
-                completer.clear();
             }
         }
 

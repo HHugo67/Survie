@@ -1,5 +1,13 @@
 survie:
 
+# Contient les messages de join et quit s'il sont actifs
+# Mettre %player% pour avoir le nom du joueur
+# Mettre %current% pour avoir le nombre de joueurs en ligne
+# Mettre %max% pour avoir le nombre maximum de joueurs sur le serveur
+  connexion_joueur:
+    join: "&6%player% &7a rejoint la partie &8(%current%/%max%)"
+    quit: "&6%player% &7a quitté la partie &8(%current%/%max%)"
+
 # Contient les messages d'activation/désactivation du mode admin
 # Mettre %adminmode% pour avoir l'état de la fonctionnalité (true/false)
 # Mettre %target% pour avoir le joueur ciblé
@@ -17,13 +25,18 @@ survie:
       joueur_remove: "&aTu n'es désormais plus %prefix%!"
       deja_non_admin: "&6%target% &cn'est déjà pas %prefix%"
 
-# Contient les messages de join et quit s'il sont actifs
-# Mettre %player% pour avoir le nom du joueur
-# Mettre %current% pour avoir le nombre de joueurs en ligne
-# Mettre %max% pour avoir le nombre maximum de joueurs sur le serveur
-  connexion_joueur:
-    join: "&6%player% &7a rejoint la partie &8(%current%/%max%)"
-    quit: "&6%player% &7a quitté la partie &8(%current%/%max%)"
+# Contient les messages liés aux coins
+# Mettre %coins% pour avoir le total de coins
+# Mettre %target% pour avoir le joueur visé
+  coins:
+    amount: "&aTu as &6%amount% &acoins"
+    receive: "&aTu as reçu &6%coins% &acoins de la part de &6%player%"
+    lose: "&aTu as perdu &6%coins% &acoins"
+    yourself: "&cTu ne peux pas t'envoyer de coins à toi-même"
+    not_enough: "&cTu n'as pas assez de coins"
+    player_amount: "&6%target% &aa &6%coins% &acoins"
+    player_give: "&aTu as donné &6%coins% &acoins à &6%target%&a"
+    player_remove: "&aTu as retiré &6%coins% &acoins à &6%target%&a"
 
 # Contient les messages liés à la santé du joueur
   sante:

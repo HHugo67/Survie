@@ -38,7 +38,7 @@ public class ConnexionJoueur implements Listener
                 player.setMetadata("AdminMode", new FixedMetadataValue(Survie.getInstance(), isAdmin));
         }
 
-        db.addPlayer(uuid, player.getName(), isAdmin);
+        db.addPlayer(uuid, player.getName(), isAdmin, 0);
 
         if(sc.getBoolean("survie.connexion_joueur.join"))
         {

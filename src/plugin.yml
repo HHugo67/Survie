@@ -10,3 +10,5 @@ commands:
     description: Configure le plugin depuis un menu
   customhoe:
     description: Recevoir la houe custom
+  coins:
+    description: Toutes les commandes liées aux coins

@@ -52,7 +52,7 @@ public class DatabaseManager
         try(Statement stmt = connection.createStatement())
         {
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS JOUEURS (UUID TEXT PRIMARY KEY UNIQUE NOT NULL, " +
-                    "Name TEXT UNIQUE NOT NULL, Admin BOOLEAN NOT NULL)");
+                    "Name TEXT UNIQUE NOT NULL, Admin BOOLEAN NOT NULL, Coins INTEGER NOT NULL)");
         }
         catch (SQLException ex)
         {
@@ -61,14 +61,15 @@ public class DatabaseManager
         }
     }
 
-    public void addPlayer(String uuid, String name, boolean isAdmin)
+    public void addPlayer(String uuid, String name, boolean isAdmin, int coins)
     {
         try (PreparedStatement statement = connection.
                 prepareStatement("INSERT OR IGNORE INTO JOUEURS " +
-                        "(UUID, Name, Admin) VALUES (?, ?, ?)")) {
+                        "(UUID, Name, Admin, Coins) VALUES (?, ?, ?, ?)")) {
             statement.setString(1, uuid);
             statement.setString(2, name);
             statement.setBoolean(3, isAdmin);
+            statement.setInt(4, coins);
             statement.executeUpdate();
         }
         catch (SQLException ex)
@@ -109,7 +110,9 @@ public class DatabaseManager
                 if(rs.next())
                     return rs.getString("Name");
             }
-        } catch (SQLException ex) {
+        }
+        catch (SQLException ex)
+        {
             plugin.getLogger().severe(Survie.ANSI_WHITE_BACKGROUND + Survie.ANSI_RED
                     + ex.getMessage() + Survie.ANSI_RESET);
         }
@@ -190,6 +193,52 @@ public class DatabaseManager
         }
 
         return players;
+    }
+
+    public int getCoins(String uuid)
+    {
+        String sql = "SELECT Coins FROM JOUEURS WHERE UUID = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql))
+        {
+            statement.setString(1, uuid);
+            try(ResultSet rs = statement.executeQuery())
+            {
+                if(rs.next())
+                    return rs.getInt("Coins");
+            }
+        }
+        catch (SQLException ex)
+        {
+            plugin.getLogger().severe(Survie.ANSI_WHITE_BACKGROUND + Survie.ANSI_RED
+                    + ex.getMessage() + Survie.ANSI_RESET);
+        }
+        return -1;
+    }
+
+    public int addCoins(String uuid, int coins)
+    {
+        String sql = "UPDATE JOUEURS SET Coins = Coins + ? WHERE UUID = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql))
+        {
+            statement.setInt(1, coins);
+            statement.setString(2, uuid);
+            int ligneMaj = statement.executeUpdate();
+            if(ligneMaj > 0)
+                return getCoins(uuid);
+            else
+                return -1;
+        }
+        catch (SQLException ex)
+        {
+            plugin.getLogger().severe(Survie.ANSI_WHITE_BACKGROUND + Survie.ANSI_RED
+                    + ex.getMessage() + Survie.ANSI_RESET);
+        }
+        return -1;
+    }
+
+    public int removeCoins(String uuid, int coins)
+    {
+        return addCoins(uuid, -coins);
     }
 
     public static DatabaseManager getInstance()
